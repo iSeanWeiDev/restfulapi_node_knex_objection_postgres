@@ -1,0 +1,103 @@
+{
+  "name": "be_theme_flight",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "license": "NON",
+  "scripts": {
+    "test": "jest",
+    "clean": "rimraf ./dist",
+    "transpile": "babel ./src --out-dir ./dist",
+    "dev": "nodemon --exec babel-node src/index.js",
+    "build": "npm-run-all clean transpile",
+    "dev:prod": "node ./dist",
+    "start": "npm-run-all build dev:prod",
+    "dump2sql": "cd db && dbml2sql ./db.dbml --postgres > dump.sql",
+    "build4dbml": "cd db && dbdocs build ./db.dbml --password Welcome2021!",
+    "knex:make-migrate": "nf run knex migrate:make",
+    "knex:make-seed": "nf run knex seed:make",
+    "knex:migrate": "nf run knex migrate:latest",
+    "knex:seed": "nf run knex seed:run"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.15.4",
+    "aws-serverless-express": "^3.4.0",
+    "axios": "^0.22.0",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "core-js": "^3.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "knex": "^0.95.11",
+    "lodash": "^4.17.21",
+    "objection": "^2.2.17",
+    "pg": "^8.7.1",
+    "pino": "^6.13.3",
+    "pino-pretty": "^7.0.1",
+    "query-string": "^7.0.1",
+    "regenerator-runtime": "^0.13.9",
+    "shopify-api-node": "^3.8.0",
+    "shopify-token": "^4.0.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/plugin-transform-async-to-generator": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-transform-imports": "^2.0.0",
+    "eslint": "^7.12.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^6.0.0",
+    "jest": "^25.5.4",
+    "lint-staged": "^10.5.4",
+    "localtunnel": "^2.0.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.6",
+    "npm-run-all": "^4.1.5",
+    "prettier": "2.1.2",
+    "rimraf": "^3.0.2"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add ."
+    ],
+    "src/**/*.{html,css,less,ejs,json}": [
+      "prettier --write",
+      "git add ."
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "nodemonConfig": {
+    "exec": "npm start",
+    "watch": [
+      "src/*"
+    ],
+    "ignore": [
+      "**/__tests__/**",
+      "*.test.js",
+      "*.spec.js"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">= 10.0.0",
+    "npm": ">= 6.0.0"
+  }
+}

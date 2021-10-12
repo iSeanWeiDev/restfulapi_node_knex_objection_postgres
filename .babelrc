@@ -1,0 +1,29 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": false
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-async-to-generator",
+      {
+        "module": "bluebird",
+        "method": "coroutine"
+      }
+    ],
+    "dynamic-import-node",
+    "transform-imports",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@app": "./src"
+        }
+      }
+    ]
+  ]
+}

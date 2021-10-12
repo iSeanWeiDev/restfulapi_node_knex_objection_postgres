@@ -1,0 +1,2 @@
+- [shopify-token](https://www.npmjs.com/package/shopify-token)
+- [Shopify API Node.js](https://www.npmjs.com/package/shopify-api-node)

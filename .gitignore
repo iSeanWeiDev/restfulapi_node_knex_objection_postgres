@@ -1,0 +1,12 @@
+# package and log files
+node_modules
+yarn.lock
+yarn-error.log
+db/dbml-error.log
+
+# environment files
+.vscode
+.env
+
+# dist directory
+dist

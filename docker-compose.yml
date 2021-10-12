@@ -1,0 +1,29 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: themeflight
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: Password2021!
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - 53603:53603
+      - 5000:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: db@themeflight.com
+      PGADMIN_DEFAULT_PASSWORD: Welcome2021!
+volumes:
+  postgres:
