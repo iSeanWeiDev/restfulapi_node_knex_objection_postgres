@@ -2,7 +2,7 @@
   "name": "be_theme_flight",
   "version": "0.1.0",
   "main": "src/index.js",
-  "license": "NON",
+  "license": "UNLICENSED",
   "scripts": {
     "test": "jest",
     "clean": "rimraf ./dist",
@@ -48,6 +48,7 @@
     "@babel/plugin-transform-async-to-generator": "^7.12.1",
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
+    "aws-sdk": "^2.1006.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-imports": "^2.0.0",

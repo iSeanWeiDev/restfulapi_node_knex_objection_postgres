@@ -1,0 +1,43 @@
+name: 'ThemeFlight Production Deploy'
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    name: Production Deploy
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_MIN_POOL: ${{ secrets.DB_MIN_POOL }}
+      DB_MAX_POOL: ${{ secrets.DB_MAX_POOL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - name: Install Serverless Services
+        run: npm install -g serverless@latest
+      - name: Install Node Foreman Service
+        run: npm install -g foreman
+      - name: Install Dependencies
+        run: yarn install --no-lockfile
+      - name: Migrate DB
+        run: yarn knex:migrate
+      - name: Seed DB
+        run: yarn knex:seed
+      - name: Build
+        run: yarn build
+      - name: Deploy
+        run: sls deploy
