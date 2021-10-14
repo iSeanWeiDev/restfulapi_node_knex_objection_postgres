@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/callback', (req, res) => {
-  console.log(req.query.code);
+  console.log(req.query);
 });
 
 router.use('/api', apiRoutes);

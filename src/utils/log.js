@@ -1,12 +1,11 @@
 import pino from 'pino';
-import config from '@app/config';
 
 const logConfig = {
   base: null,
-  level: config.LOG_LEVEL
+  level: process.env.LOG_LEVEL || 'info'
 };
 
-if (config.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   // Note: pino-pretty is installed as a dev package
   logConfig.prettyPrint = {
     ignore: 'pid,hostname',

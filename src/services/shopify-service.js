@@ -1,23 +1,31 @@
-import config from '@app/config';
 import ShopifyToken from 'shopify-token';
 import Shopify from 'shopify-api-node';
 
-export const genAccessToken = (shopName) =>
-  new Promise((resolve, reject) => {
+export const genAuthUrl = async (shopName) => {
+  try {
+    const redirectUri =
+      process.env.NODE_ENV === 'production'
+        ? 'http://localhost:8000/callback'
+        : 'http://localhost:8000/callback';
+
     const shopifyToken = new ShopifyToken({
-      sharedSecret: config.SHOPIFY_API_SECRET,
-      redirectUri: 'http://localhost:8000/callback',
-      apiKey: config.SHOPIFY_API_KEY
+      sharedSecret: process.env.SHOPIFY_API_SECRET,
+      redirectUri: redirectUri,
+      apiKey: process.env.SHOPIFY_API_KEY
     });
 
-    // const nonce = shopifyToken.generateNonce();
-    // console.log(nonce);
-    // const url = shopifyToken.generateAuthUrl('gate4life2', config.SCOPES, nonce);
-    shopifyToken
-      .getAccessToken(shopName, 'b8e591497a5a91c67b1f9cebcbc62a50')
-      .then((data) => resolve(data))
-      .catch((error) => reject(error));
-  });
+    const nonce = shopifyToken.generateNonce();
+    const url = shopifyToken.generateAuthUrl(shopName, process.env.SCOPES, nonce);
+    return url;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//   shopifyToken
+//     .getAccessToken(shopName, 'bf6aec0c370060cfe22d146eefe929e3')
+//     .then((data) => resolve(data))
+//     .catch((error) => reject(error));
 
 export const retrieveThemes = (shopName, accessToken) =>
   new Promise((resolve, reject) => {

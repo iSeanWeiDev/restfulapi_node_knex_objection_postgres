@@ -7,6 +7,7 @@ provider:
   lambdaHashingVersion: 20201221
   stage: dev
   region: us-east-1
+  role: arn:aws:iam::530158470050:role/themeflight-dev-us-east-1-lambdaRole
   environment:
     NODE_ENV: production
     REGION: us-east-1

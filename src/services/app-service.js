@@ -1,4 +1,3 @@
-import { NotFound } from 'http-errors';
 import { Theme, Shop, Webhook } from '@app/models';
 import { VAlIDATION_RESPONSE_CODE } from '@app/constants';
 import { shopifyService } from '@app/services';
@@ -29,7 +28,7 @@ export const validate = async (shopName) => {
   }
 };
 
-export const initialize = async (actionType, shopName) => {
+export const initialize = async (actionType, shopName, accessToken) => {
   try {
     if (actionType === VAlIDATION_RESPONSE_CODE['NOT_FOUND_SHOP']) {
       return await Shop.query().insert({
@@ -38,8 +37,7 @@ export const initialize = async (actionType, shopName) => {
     }
 
     if (actionType === VAlIDATION_RESPONSE_CODE['ACCESS_TOKEN_REQUIRED']) {
-      const token = await shopifyService.genAccessToken(shopName);
-      return await Shop.query().update({ accessToken: token }).where({ name: shopName });
+      return await Shop.query().update({ accessToken: accessToken }).where({ name: shopName });
     }
 
     if (actionType === VAlIDATION_RESPONSE_CODE['NOT_FOUND_THEMES']) {
@@ -71,6 +69,7 @@ export const initialize = async (actionType, shopName) => {
 
     return true;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

@@ -1,5 +1,7 @@
 import knex from 'knex';
+import dotenv from 'dotenv';
 import { knexSnakeCaseMappers } from 'objection';
+dotenv.config();
 
 let config;
 
