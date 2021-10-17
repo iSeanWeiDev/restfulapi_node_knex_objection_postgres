@@ -17,7 +17,7 @@ const controller = {
         if (Object.keys(VAlIDATION_RESPONSE_CODE).includes(result)) {
           const res = await appService.initialize(result, name, token);
           if (res === VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK']) {
-            return;
+            return VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK'];
           }
 
           await recursiveValidation(name, token);

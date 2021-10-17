@@ -4,7 +4,7 @@ export const load = async (shopName) => {
   try {
     const result = await Shop.query()
       .findOne({ name: shopName })
-      .withGraphFetched('[schedules, themes, schedules]');
+      .withGraphFetched('[schedules, themes]');
     return result;
   } catch (error) {
     throw error;

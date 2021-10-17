@@ -4,7 +4,7 @@ CREATE TYPE "theme_status" AS ENUM (
   'NOT_READY'
 );
 
-CREATE TYPE "webhook_type" AS ENUM (
+CREATE TYPE "webhook_topic" AS ENUM (
   'THEME_CREATE',
   'THEME_PUBLISH',
   'THEME_UPDATE'
@@ -18,6 +18,7 @@ CREATE TYPE "webhook_status" AS ENUM (
 CREATE TABLE "shops" (
   "id" SERIAL PRIMARY KEY,
   "name" varchar,
+  "access_token" varchar,
   "created_at" timestamp DEFAULT (now()),
   "updated_at" timestamp DEFAULT (now())
 );
@@ -47,8 +48,9 @@ CREATE TABLE "schedules" (
 CREATE TABLE "webhooks" (
   "id" SERIAL PRIMARY KEY,
   "shop_id" int NOT NULL,
-  "type" webhook_type,
-  "status" webhook_status,
+  "topic" webhook_topic,
+  "api_webhook_id" varchar,
+  "address" varchar,
   "created_at" timestamp DEFAULT (now()),
   "updated_at" timestamp DEFAULT (now())
 );

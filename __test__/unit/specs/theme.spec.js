@@ -2,9 +2,9 @@ import app from '../server';
 import supertest from 'supertest';
 
 describe('App Controller Test Case', () => {
-  test('POST /api/validate', async () => {
+  test('GET /api/themes', async () => {
     await supertest(app)
-      .post('/api/validate')
+      .get('/api/themes')
       .send({
         shopName: 'gate4life2.myshopify.com',
         accessToken: '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'
@@ -12,7 +12,7 @@ describe('App Controller Test Case', () => {
       .expect(200)
       .then((response) => {
         // Check type and length
-        console.log(response.body);
+        console.log(JSON.stringify(response.body, null, 2));
       })
       .catch((error) => {
         console.log(error);
