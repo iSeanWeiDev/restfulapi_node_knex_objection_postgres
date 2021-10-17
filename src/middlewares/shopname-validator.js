@@ -1,17 +1,22 @@
 import { NotAcceptable } from 'http-errors';
+
 const shopNameValidator = async (req, res, next) => {
   try {
-    // todo
-    // 1. has req.header.shopName =>
-    // 1-1 if true => go validtor
-    // 1-2 if false => return status
-    // 2. validator
-    // 2-1 has name => it should be looks like "*.myshopify.com" => string.includes('myshopify.com)
-    // 2-2 hasnt name => create new error for validation
-    // if (!canUseShop) {
-    //   const error = new NotAcceptable('Missing parameters on request query');
-    //   throw error;
-    // }
+    const { shopName, accessToken } = req.body;
+    if (!shopName || !accessToken) {
+      const error = new NotAcceptable('Missing parameters on query.');
+      throw error;
+    }
+    const isDomainFormat = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(shopName); 
+    if (!isDomainFormat) {
+      const error = new NotAcceptable('Not valid domain');
+      throw error;
+    }
+
+    if (!shopName.includes('myshopify.com')) {
+      const error = new NotAcceptable('Not shopify app name');
+      throw error;
+    }
     next();
   } catch (error) {
     res.status(error.statusCode).json({
