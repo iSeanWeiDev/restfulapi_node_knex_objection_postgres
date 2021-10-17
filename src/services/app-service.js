@@ -1,5 +1,5 @@
 import { Theme, Shop, Webhook } from '@app/models';
-import { VAlIDATION_RESPONSE_CODE } from '@app/constants';
+import { VAlIDATION_RESPONSE_CODE, ALLOWED_WEBHOOKS } from '@app/constants';
 import { shopifyService } from '@app/services';
 
 export const validate = async (shopName) => {
@@ -13,12 +13,12 @@ export const validate = async (shopName) => {
     }
 
     const numberOfThemes = await Theme.query().where({ shopId: shop.id }).count();
-    if (numberOfThemes === 0) {
+    if (parseInt(numberOfThemes[0].count, 10) === 0) {
       return VAlIDATION_RESPONSE_CODE['NOT_FOUND_THEMES'];
     }
 
     const numberOfWebhooks = await Webhook.query().where({ shopId: shop.id }).count();
-    if (numberOfWebhooks === 0) {
+    if (parseInt(numberOfWebhooks[0].count, 10) === 0) {
       return VAlIDATION_RESPONSE_CODE['NOT_FOUND_WEBHOOKS'];
     }
 
@@ -42,14 +42,14 @@ export const initialize = async (actionType, shopName, accessToken) => {
 
     if (actionType === VAlIDATION_RESPONSE_CODE['NOT_FOUND_THEMES']) {
       const shop = await Shop.query().findOne({ name: shopName });
-      const retrievedTheems = await shopifyService.retrieveThemes(shopName, shop.accessToken);
-      const insertData = retrievedTheems.body.themes.map((el) => ({
+      const retrievedTheems = await shopifyService.retrieveThemes(shop.name, shop.accessToken);
+      const insertData = retrievedTheems.map((el) => ({
         name: el.name,
         description: '',
         tags: '',
         status: el.role === 'main' ? 'ACTIVATED' : 'NOT_READY',
         themeStoreId: el.theme_store_id.toString(),
-        shopId: shopInfo.id,
+        shopId: shop.id,
         themeCreatedAt: el.created_at
       }));
       return await Theme.query().insert(insertData);
@@ -57,19 +57,27 @@ export const initialize = async (actionType, shopName, accessToken) => {
 
     if (actionType === VAlIDATION_RESPONSE_CODE['NOT_FOUND_WEBHOOKS']) {
       const shop = await Shop.query().findOne({ name: shopName });
-      const webhooks = await shopifyService.retrieveWebhooks(shopName, shop.accessToken);
+      const retrievedWebhoks = await shopifyService.retrieveWebhooks(shopName, accessToken);
+      const filteredWebhooks = retrievedWebhoks.filter((el) => el.topic.split[0] === 'themes');
+      if (filteredWebhooks.length > 0) {
+        const insertData = filteredWebhooks.map((el) => {
+          const idx = Object.values(ALLOWED_WEBHOOKS).indexOf(el.topic);
+          return {
+            shopId: shop.id,
+            topic: Object.keys(ALLOWED_WEBHOOKS)[idx],
+            apiWebhookId: el.id,
+            address: el.address
+          };
+        });
+        return await Webhook.query().insert(insertData);
+      }
 
-      const insertData = webhooks.body.webhooks.map((el) => ({
-        shopId: shop.id,
-        type: el.topic,
-        status: el.status
-      }));
-      return await Webhook.query().insert(insertData);
+      return VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK'];
     }
 
     return true;
   } catch (error) {
-    console.log(error);
+    console.log('error', error);
     throw error;
   }
 };

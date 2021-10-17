@@ -22,6 +22,14 @@ class Theme extends BaseModel {
           from: `${Table.THEME}.shopId`,
           to: `${Table.SHOP}.id`
         }
+      },
+      schedules: {
+        relation: Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'schedule'),
+        join: {
+          from: `${Table.THEME}.id`,
+          to: `${Table.SCHEDULE}.themeId`
+        }
       }
     };
   }

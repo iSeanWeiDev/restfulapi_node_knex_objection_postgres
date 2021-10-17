@@ -21,7 +21,6 @@ const config = async () => {
 
     return PRODUCTION ? { ...variables } : { ...DEV_VARIABLES };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

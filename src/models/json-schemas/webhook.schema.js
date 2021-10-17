@@ -4,7 +4,8 @@ export default {
   properties: {
     id: { type: 'integer' },
     shopId: { type: 'integer' },
-    type: { type: 'string' },
-    status: { type: 'string' }
+    topic: { type: 'string' },
+    apiWebhookId: { type: 'string' },
+    apiCreatedAt: { type: 'string' }
   }
 };

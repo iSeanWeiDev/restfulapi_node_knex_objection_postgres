@@ -10,19 +10,21 @@ const controller = {
         const error = new NotAcceptable('Missing parameters on query.');
         throw error;
       }
-      const result = await appService.validate(shopName);
-      await appService.initialize(result, shopName, accessToken);
-      // await recursiveValidation(shopName);
-      // const recursiveValidation = async (name) => {
-      //   const result = await appService.validate(name);
 
-      //   if (Object.keys(VAlIDATION_RESPONSE_CODE).includes(result)) {
-      // await appService.initialize(result, name);
-      // await recursiveValidation(name);
-      //   }
-      // };
+      const recursiveValidation = async (name, token) => {
+        const result = await appService.validate(name);
 
-      // await recursiveValidation(shopName);
+        if (Object.keys(VAlIDATION_RESPONSE_CODE).includes(result)) {
+          const res = await appService.initialize(result, name, token);
+          if (res === VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK']) {
+            return;
+          }
+
+          await recursiveValidation(name, token);
+        }
+      };
+
+      await recursiveValidation(shopName, accessToken);
 
       res.status(200).json({
         msg: `Successfully ${shopName} has been registered on our service.`

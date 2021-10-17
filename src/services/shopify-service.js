@@ -22,11 +22,6 @@ export const genAuthUrl = async (shopName) => {
   }
 };
 
-//   shopifyToken
-//     .getAccessToken(shopName, 'bf6aec0c370060cfe22d146eefe929e3')
-//     .then((data) => resolve(data))
-//     .catch((error) => reject(error));
-
 export const retrieveThemes = (shopName, accessToken) =>
   new Promise((resolve, reject) => {
     const shopify = new Shopify({
@@ -40,7 +35,6 @@ export const retrieveThemes = (shopName, accessToken) =>
       .catch((error) => reject(error));
   });
 
-// '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'
 export const retrieveWebhooks = (shopName, accessToken) =>
   new Promise((resolve, reject) => {
     const shopify = new Shopify({
@@ -64,7 +58,7 @@ export const createWebhook = (topic, shopName, accessToken) =>
     shopify.webhook
       .create({
         format: 'json',
-        address: `${process.env.APP_HOST_NAME}/webhooks`,
+        address: `https://google.com/webhooks`,
         topic: topic
       })
       .then((data) => resolve(data))
