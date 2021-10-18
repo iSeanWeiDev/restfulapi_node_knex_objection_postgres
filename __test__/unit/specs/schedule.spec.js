@@ -7,7 +7,7 @@ describe('App Controller Test Case', () => {
       .get('/api/themes')
       .send({
         shopName: 'gate4life2.myshopify.com',
-        accessToken: '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'
+        accessToken: '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'
       })
       .expect(200)
       .then((response) => {

@@ -15,8 +15,8 @@ const controller = {
         const result = await appService.validate(name);
 
         if (Object.keys(VAlIDATION_RESPONSE_CODE).includes(result)) {
-          const res = await appService.initialize(result, name, token);
-          if (res === VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK']) {
+          const statusOfInitialize = await appService.initialize(result, name, token);
+          if (statusOfInitialize === VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK']) {
             return VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK'];
           }
 
@@ -24,10 +24,9 @@ const controller = {
         }
       };
 
-      await recursiveValidation(shopName, accessToken);
-
+      const initializeResult = await recursiveValidation(shopName, accessToken);
       res.status(200).json({
-        msg: `Successfully ${shopName} has been registered on our service.`
+        msg: initializeResult
       });
     } catch (error) {
       throw error;
