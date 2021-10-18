@@ -1,4 +1,5 @@
 import localtunnel from 'localtunnel';
+import log from './log';
 
 const initialize = async () => {
   try {
@@ -8,7 +9,7 @@ const initialize = async () => {
     };
 
     const tunnel = await localtunnel(opts);
-    console.log(tunnel.url);
+    log.info(`local turnnel server is running on ${tunnel.url}`);
     process.env = { ...process.env, APP_HOST_NAME: tunnel.url };
   } catch (error) {
     console.log(error);

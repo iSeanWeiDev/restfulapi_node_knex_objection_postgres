@@ -14,8 +14,35 @@ provider:
     SECRET_NAME: 'arn:aws:secretsmanager:us-east-1:530158470050:secret:dev-themeflight-3QPq2Q'
 
 functions:
-  app:
+  api:
     handler: lambda.handler
     events:
       - http: ANY /
       - http: ANY /{proxy+}
+    package:
+      include:
+        - dist/**
+        - package.json
+        - lambda.js
+      exclude:
+        - '*'
+        - node_modules/**
+        - .github/**
+        - .vscode/**
+        - __test__/**
+        - docs/**
+        - db/**
+  theme-worker:
+    handler: dist/lambda/theme-lambda.handler
+    timeout: 600
+    events:
+      - schedule:
+        rate: rate(10 minutes)
+        enabled: true
+  schedule-worker:
+    handler: dist/lambda/schedule-lambda.hanlder
+    timeout: 600
+    events:
+      - schedule:
+        rate: rate(1 minutes)
+        enabled: true

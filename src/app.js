@@ -9,7 +9,7 @@ import config from '@app/config';
 import routes from '@app/routes';
 
 // Configure the utils before loading.
-const DEBUG = process.env.NODE_ENV === 'development';
+const DEBUG = process.env.NODE_ENV !== 'production';
 database.enableTracing();
 
 // Setup the app.
@@ -22,9 +22,7 @@ const app = express();
 app.use(
   cors({
     origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
   })
 );
 

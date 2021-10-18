@@ -1,3 +1,4 @@
+import { NotAcceptable } from 'http-errors';
 import { scheduleService } from '@app/services';
 
 const controller = {
@@ -12,13 +13,16 @@ const controller = {
       return res.status(error.statusCode).json({ msg: error.message });
     }
   },
-  update: async (req, res) => {
+  updateSchedule: async (req, res) => {
     try {
-      const { shopName, startAt, themeId } = req.body;
-      if (!shopName || !startAt || !themeId) {
-        const error = new NotAcceptable('Missing parameters on query.');
+      const { shopName } = req.shopInfo;
+      const { themeId } = req.params;
+      const { startAt, endAt } = req.body;
+      if (!startAt) {
+        const error = new NotAcceptable('Missing parameters');
         throw error;
       }
+
       const updatedSchedule = await scheduleService.updateSchedule(shopName, themeId, startAt);
       return res.status(200).json(updatedSchedule);
     } catch (error) {

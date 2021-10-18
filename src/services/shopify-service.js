@@ -35,6 +35,19 @@ export const retrieveThemes = (shopName, accessToken) =>
       .catch((error) => reject(error));
   });
 
+export const deleteTheme = (shopName, accessToken, themeId) =>
+  new Promise((resolve, reject) => {
+    const shopify = new Shopify({
+      shopName: shopName,
+      accessToken: accessToken
+    });
+
+    shopify.theme
+      .delete(themeId)
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
+
 export const retrieveWebhooks = (shopName, accessToken) =>
   new Promise((resolve, reject) => {
     const shopify = new Shopify({

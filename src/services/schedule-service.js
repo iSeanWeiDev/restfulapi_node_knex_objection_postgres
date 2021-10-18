@@ -15,14 +15,14 @@ export const updateSchedule = async (shopName, themeId, startAt) => {
   try {
     const shop = await Shop.query().findOne({ name: shopName });
     const schedule = await Schedule.query().findOne({
-      themeId: themeId,
+      themeId: parseInt(themeId, 10),
       shopId: shop.id
     });
 
     if (!schedule) {
       const newSchedule = await Schedule.query().insertAndFetch({
         startAt: new Date(startAt),
-        themeId: themeId,
+        themeId: parseInt(themeId, 10),
         shopId: shop.id
       });
       return newSchedule;

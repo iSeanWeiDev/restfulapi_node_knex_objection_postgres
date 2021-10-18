@@ -8,7 +8,17 @@ const controller = {
       const themes = await themeService.load(shopName);
       res.status(200).json(themes);
     } catch (error) {
-      throw error;
+      return res.status(error.statusCode).json({ msg: error.message });
+    }
+  },
+  deleteTheme: async (req, res) => {
+    try {
+      const { shopName, accessToken } = req.shopInfo;
+      const { themeId } = req.params;
+      const deleted = await themeService.remove(shopName, accessToken, themeId);
+      return deleted;
+    } catch (error) {
+      return res.status(error.statusCode).json({ msg: error.message });
     }
   }
 };
