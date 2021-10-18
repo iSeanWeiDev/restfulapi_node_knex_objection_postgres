@@ -5,11 +5,7 @@ import { VAlIDATION_RESPONSE_CODE } from '@app/constants';
 const controller = {
   validate: async (req, res) => {
     try {
-      const { shopName, accessToken } = req.body;
-      if (!shopName || !accessToken) {
-        const error = new NotAcceptable('Missing parameters on query.');
-        throw error;
-      }
+      const { shopName, accessToken } = req.shopInfo;
 
       const recursiveValidation = async (name, token) => {
         const result = await appService.validate(name);

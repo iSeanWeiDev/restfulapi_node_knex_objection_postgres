@@ -1,1 +1,1 @@
-export { default as shopNameValidator } from './shopname-validator';
+export { default as hasShopInfo } from './has-shopinfo';

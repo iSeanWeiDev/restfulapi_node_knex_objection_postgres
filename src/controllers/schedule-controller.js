@@ -1,18 +1,15 @@
 import { scheduleService } from '@app/services';
 
 const controller = {
-  getOne: async (req, res) => {
+  loadSchedules: async (req, res) => {
     try {
-      const { id } = req.body;
-      if (!id) {
-        const error = new NotAcceptable('Missing parameters on query.');
-        throw error;
-      }
+      const { shopName } = req.shopInfo;
 
-      const schedule = await scheduleService.getOne(id);
-      return res.status(200).json(schedule);
+      const schedules = await scheduleService.load(shopName);
+
+      return res.status(200).json(schedules);
     } catch (error) {
-      throw error;
+      return res.status(error.statusCode).json({ msg: error.message });
     }
   },
   update: async (req, res) => {

@@ -1,11 +1,12 @@
-import { Shop } from '@app/models';
+import { Shop, Theme } from '@app/models';
 
 export const load = async (shopName) => {
   try {
-    const result = await Shop.query()
-      .findOne({ name: shopName })
-      .withGraphFetched('[schedules, themes]');
-    return result;
+    const shop = await Shop.query().findOne({ name: shopName });
+
+    const themes = await Theme.query().where({ shopId: shop.id }).returning('*');
+
+    return themes;
   } catch (error) {
     throw error;
   }

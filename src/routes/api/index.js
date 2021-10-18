@@ -1,11 +1,11 @@
 import express from 'express';
+import { hasShopInfo } from '@app/middlewares';
 import { appController, themeController, scheduleController } from '@app/controllers';
-import { shopNameValidator } from '@app/middlewares';
 
 const router = express.Router();
 
-router.post('/validate', shopNameValidator, appController.validate);
-router.get('/themes', shopNameValidator, themeController.loadThemes);
-router.patch('/schedule/:id', shopNameValidator, scheduleController.update);
+router.post('/validate', hasShopInfo, appController.validate);
+router.get('/themes', hasShopInfo, themeController.loadThemes);
+router.get('/schedules', hasShopInfo, scheduleController.loadSchedules);
 
 export default router;

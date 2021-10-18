@@ -1,14 +1,12 @@
 import app from '../server';
 import supertest from 'supertest';
 
-describe('App Controller Test Case', () => {
+describe('Theme Controller Test Case', () => {
   test('GET /api/themes', async () => {
     await supertest(app)
       .get('/api/themes')
-      .send({
-        shopName: 'gate4life2.myshopify.com',
-        accessToken: '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'
-      })
+      .set('shopname', 'gate4life2.myshopify.com')
+      .set('accesstoken', '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')
       .expect(200)
       .then((response) => {
         // Check type and length
