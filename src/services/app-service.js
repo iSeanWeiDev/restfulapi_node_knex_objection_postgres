@@ -2,14 +2,19 @@ import { Theme, Shop, Webhook } from '@app/models';
 import { VAlIDATION_RESPONSE_CODE, ALLOWED_WEBHOOKS } from '@app/constants';
 import { shopifyService } from '@app/services';
 
-export const validate = async (shopName) => {
+export const validate = async (shopName, accessToken) => {
   try {
     const shop = await Shop.query().findOne({ name: shopName });
     if (!shop) {
       return VAlIDATION_RESPONSE_CODE['NOT_FOUND_SHOP'];
     }
+
     if (!shop.accessToken) {
       return VAlIDATION_RESPONSE_CODE['ACCESS_TOKEN_REQUIRED'];
+    }
+
+    if (shop.accessToken !== accessToken) {
+      return VAlIDATION_RESPONSE_CODE['ACCESS_TOKEN_NOT_MATCH'];
     }
 
     const numberOfThemes = await Theme.query().where({ shopId: shop.id }).count();
@@ -28,15 +33,25 @@ export const validate = async (shopName) => {
   }
 };
 
+const hasWebhookOnAPI = (array, topic) => {
+  const idx = array.findIndex((el) => el.topic === topic);
+  if (idx > -1) return true;
+  return false;
+};
+
 export const initialize = async (actionType, shopName, accessToken) => {
   try {
     if (actionType === VAlIDATION_RESPONSE_CODE['NOT_FOUND_SHOP']) {
       return await Shop.query().insert({
-        name: shopName
+        name: shopName,
+        accessToken: accessToken
       });
     }
 
-    if (actionType === VAlIDATION_RESPONSE_CODE['ACCESS_TOKEN_REQUIRED']) {
+    if (
+      actionType === VAlIDATION_RESPONSE_CODE['ACCESS_TOKEN_REQUIRED'] ||
+      actionType === VAlIDATION_RESPONSE_CODE['ACCESS_TOKEN_NOT_MATCH']
+    ) {
       return await Shop.query().update({ accessToken: accessToken }).where({ name: shopName });
     }
 
@@ -58,21 +73,40 @@ export const initialize = async (actionType, shopName, accessToken) => {
     if (actionType === VAlIDATION_RESPONSE_CODE['NOT_FOUND_WEBHOOKS']) {
       const shop = await Shop.query().findOne({ name: shopName });
       const retrievedWebhoks = await shopifyService.retrieveWebhooks(shopName, accessToken);
-      const filteredWebhooks = retrievedWebhoks.filter((el) => el.topic.split[0] === 'themes');
-      if (filteredWebhooks.length > 0) {
-        const insertData = filteredWebhooks.map((el) => {
-          const idx = Object.values(ALLOWED_WEBHOOKS).indexOf(el.topic);
-          return {
-            shopId: shop.id,
-            topic: Object.keys(ALLOWED_WEBHOOKS)[idx],
-            apiWebhookId: el.id,
-            address: el.address
-          };
-        });
-        return await Webhook.query().insert(insertData);
-      }
+      const filteredWebhooks = retrievedWebhoks.filter((el) => el.topic.split('/')[0] === 'themes');
+      await Promise.all(
+        Object.keys(ALLOWED_WEBHOOKS).map(async (key) => {
+          if (!hasWebhookOnAPI(filteredWebhooks, ALLOWED_WEBHOOKS[key])) {
+            const resFromApi = await shopifyService.createWebhook(
+              ALLOWED_WEBHOOKS[key],
+              shopName,
+              accessToken
+            );
+            await Webhook.query().insert({
+              shopId: shop.id,
+              topic: key,
+              apiWebhookId: `${resFromApi.id}`,
+              address: resFromApi.address
+            });
+          } else {
+            const webhook = await Webhook.query().findOne({
+              shopId: shop.id,
+              topic: key
+            });
+            if (!webhook) {
+              const tmp = filteredWebhooks.find((el) => el.topic === ALLOWED_WEBHOOKS[key]);
+              await Webhook.query().insert({
+                shopId: shop.id,
+                topic: key,
+                apiWebhookId: `${tmp.id}`,
+                address: tmp.address
+              });
+            }
+          }
+        })
+      );
 
-      return VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK'];
+      return true;
     }
 
     return true;

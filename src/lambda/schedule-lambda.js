@@ -8,6 +8,8 @@ exports.handler = async (event) => {
       log.error({ msg: 'Missing jobId in event', event });
       return;
     }
+
+    return;
   } catch (error) {
     log.error({
       msg: 'Caught exception while processing job'

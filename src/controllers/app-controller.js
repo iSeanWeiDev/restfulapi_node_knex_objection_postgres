@@ -8,14 +8,10 @@ const controller = {
       const { shopName, accessToken } = req.shopInfo;
 
       const recursiveValidation = async (name, token) => {
-        const result = await appService.validate(name);
+        const result = await appService.validate(name, token);
 
         if (Object.keys(VAlIDATION_RESPONSE_CODE).includes(result)) {
-          const statusOfInitialize = await appService.initialize(result, name, token);
-          if (statusOfInitialize === VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK']) {
-            return VAlIDATION_RESPONSE_CODE['NOT_FOUND_API_WEBHOOK'];
-          }
-
+          await appService.initialize(result, name, token);
           await recursiveValidation(name, token);
         }
       };

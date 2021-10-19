@@ -6,7 +6,7 @@ describe('App Controller Test Case', () => {
     await supertest(app)
       .post('/api/validate')
       .set('shopname', 'gate4life2.myshopify.com')
-      .set('accesstoken', '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')
+      .set('accesstoken', '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')
       .expect(200)
       .then((response) => {
         // Check type and length
