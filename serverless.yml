@@ -12,6 +12,13 @@ provider:
     NODE_ENV: production
     REGION: us-east-1
     SECRET_NAME: 'arn:aws:secretsmanager:us-east-1:530158470050:secret:dev-themeflight-3QPq2Q'
+    DB_HOST: 'devthemeflight.c87z4vavipyc.us-east-1.rds.amazonaws.com'
+    DB_PORT: 5432
+    DB_NAME: 'themeflight'
+    DB_USER: 'dbuser'
+    DB_PASSWORD: 'Password2021!'
+    DB_MIN_POOL: 2
+    DB_MAX_POOL: 10
 
 functions:
   api:
@@ -24,6 +31,8 @@ functions:
         - dist/**
         - package.json
         - lambda.js
+        - static/**
+        - public/**
       exclude:
         - '*'
         - node_modules/**
@@ -32,17 +41,17 @@ functions:
         - __test__/**
         - docs/**
         - db/**
-  theme-worker:
-    handler: dist/lambda/theme-lambda.handler
-    timeout: 600
-    events:
-      - schedule:
-        rate: rate(10 minutes)
-        enabled: true
-  schedule-worker:
-    handler: dist/lambda/schedule-lambda.hanlder
-    timeout: 600
-    events:
-      - schedule:
-        rate: rate(1 minutes)
-        enabled: true
+  # theme-worker:
+  #   handler: dist/lambda/theme-lambda.handler
+  #   timeout: 600
+  #   events:
+  #     - schedule:
+  #       rate: rate(10 minutes)
+  #       enabled: true
+  # schedule-worker:
+  #   handler: dist/lambda/schedule-lambda.hanlder
+  #   timeout: 600
+  #   events:
+  #     - schedule:
+  #       rate: rate(1 minutes)
+  #       enabled: true

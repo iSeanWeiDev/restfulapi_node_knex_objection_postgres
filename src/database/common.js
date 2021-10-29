@@ -29,10 +29,13 @@ export function queryBuilder(tableName, opts) {
 }
 
 export const Table = {
+  LOG: camelCaseString('logs'),
   SHOP: camelCaseString('shops'),
   THEME: camelCaseString('themes'),
+  TRIGGER: camelCaseString('triggers'),
   SCHEDULE: camelCaseString('schedules'),
-  WEBHOOK: camelCaseString('webhooks')
+  SUBSCRIBE: camelCaseString('subscribes'),
+  SUBSCRIBE_TYPE: camelCaseString('subscribe_types')
 };
 
 export const knex = _knex;

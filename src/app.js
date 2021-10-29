@@ -1,3 +1,4 @@
+import path from 'path';
 import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -5,7 +6,6 @@ import cookieParser from 'cookie-parser';
 import createError from 'http-errors';
 import awsServerlessExpressMiddleware from 'aws-serverless-express/middleware';
 import database from '@app/database';
-import config from '@app/config';
 import routes from '@app/routes';
 
 // Configure the utils before loading.
@@ -14,24 +14,25 @@ database.enableTracing();
 
 // Setup the app.
 const app = express();
-(async () => {
-  const variables = await config();
-  process.env = { ...process.env, ...variables };
-})();
 
 app.use(
   cors({
     origin: '*',
-    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   })
 );
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 if (!DEBUG) {
   app.set('trust proxy', 1);
   app.use(awsServerlessExpressMiddleware.eventContext());
 }
 
+// eslint-disable-next-line global-require
 if (DEBUG) app.use(require('morgan')('dev'));
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -2,11 +2,11 @@ import path from 'path';
 import { Model } from 'objection';
 import { Table } from '@app/database/common';
 import BaseModel from './__base';
-import jsonSchema from './json-schemas/theme.schema';
+import jsonSchema from './json-schemas/subscribe.schema';
 
-class Theme extends BaseModel {
+class Subscribe extends BaseModel {
   static get tableName() {
-    return Table.THEME;
+    return Table.SUBSCRIBE;
   }
 
   static get jsonSchema() {
@@ -19,12 +19,20 @@ class Theme extends BaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: path.join(__dirname, 'shop'),
         join: {
-          from: `${Table.THEME}.shopId`,
+          from: `${Table.SUBSCRIBE}.shopId`,
           to: `${Table.SHOP}.id`
+        }
+      },
+      type: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: path.join(__dirname, 'shop'),
+        join: {
+          from: `${Table.SUBSCRIBE}.typeId`,
+          to: `${Table.SUBSCRIBE_TYPE}.id`
         }
       }
     };
   }
 }
 
-export default Theme;
+export default Subscribe;

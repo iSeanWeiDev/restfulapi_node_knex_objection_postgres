@@ -1,17 +1,17 @@
-import log from '@app/utils/log';
+import { logHelper } from '@app/helpers';
 
 exports.handler = async (event) => {
   try {
-    log.debug({ msg: 'Received event', event });
+    logHelper.debug({ msg: 'Received event', event });
 
     if (!event.jobId) {
-      log.error({ msg: 'Missing jobId in event', event });
+      logHelper.error({ msg: 'Missing jobId in event', event });
       return;
     }
 
     return;
   } catch (error) {
-    log.error({
+    logHelper.error({
       msg: 'Caught exception while processing job'
     });
   }

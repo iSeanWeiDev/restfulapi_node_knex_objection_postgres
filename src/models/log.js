@@ -1,12 +1,12 @@
 import path from 'path';
 import { Model } from 'objection';
-import { Table } from '../database/common';
+import { Table } from '@app/database/common';
 import BaseModel from './__base';
-import jsonSchema from './json-schemas/webhook.schema';
+import jsonSchema from './json-schemas/log.schema';
 
-class Webhook extends BaseModel {
+class Log extends BaseModel {
   static get tableName() {
-    return Table.WEBHOOK;
+    return Table.LOG;
   }
 
   static get jsonSchema() {
@@ -19,7 +19,7 @@ class Webhook extends BaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: path.join(__dirname, 'shop'),
         join: {
-          from: `${Table.WEBHOOK}.shopId`,
+          from: `${Table.LOG}.shopId`,
           to: `${Table.SHOP}.id`
         }
       }
@@ -27,4 +27,4 @@ class Webhook extends BaseModel {
   }
 }
 
-export default Webhook;
+export default Log;

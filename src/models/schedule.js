@@ -1,6 +1,6 @@
 import path from 'path';
 import { Model } from 'objection';
-import { Table } from '../database/common';
+import { Table } from '@app/database/common';
 import BaseModel from './__base';
 import jsonSchema from './json-schemas/schedule.schema';
 
@@ -15,17 +15,9 @@ class Schedule extends BaseModel {
 
   static get relationMappings() {
     return {
-      shop: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: path.join(__dirname, 'shop'),
-        join: {
-          from: `${Table.SCHEDULE}.shopId`,
-          to: `${Table.SHOP}.id`
-        }
-      },
       theme: {
         relation: Model.BelongsToOneRelation,
-        modelClass: path.join(__dirname, 'theme'),
+        modelClass: path.join(__dirname, 'shop'),
         join: {
           from: `${Table.SCHEDULE}.themeId`,
           to: `${Table.THEME}.id`

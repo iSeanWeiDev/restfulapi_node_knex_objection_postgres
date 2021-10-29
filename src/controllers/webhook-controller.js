@@ -1,4 +1,5 @@
 import { shopifyService } from '@app/services';
+
 const controller = {
   create: async (req, res) => {
     try {
@@ -6,7 +7,7 @@ const controller = {
       const webhook = await shopifyService.createWebhook('themes/publish', shopName, accessToken);
       return res.status(201).json(webhook);
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         msg: error.message
       });
     }
@@ -19,7 +20,7 @@ const controller = {
         data: webhooks
       });
     } catch (error) {
-      res.status(error.statusCode).json({
+      return res.status(error.statusCode).json({
         msg: error.message
       });
     }
@@ -33,8 +34,7 @@ const controller = {
         data: webhooks
       });
     } catch (error) {
-      console.log(error);
-      res.status(511).json({
+      return res.status(511).json({
         msg: error.message
       });
     }

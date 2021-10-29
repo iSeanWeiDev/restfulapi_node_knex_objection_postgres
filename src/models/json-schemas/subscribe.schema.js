@@ -4,10 +4,7 @@ export default {
   properties: {
     id: { type: 'integer' },
     shopId: { type: 'integer' },
-    name: { type: 'string' },
-    desc: { type: 'string' },
-    tags: { type: 'string' },
-    apiThemeId: { type: 'string' },
+    typeId: { type: 'integer' },
     status: { type: 'string' }
   }
 };

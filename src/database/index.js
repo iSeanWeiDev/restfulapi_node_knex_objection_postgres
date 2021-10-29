@@ -1,10 +1,10 @@
-import log from '@app/utils/log';
+import { logHelper } from '@app/helpers';
 import { knex, Table, transaction } from './common';
 
 let tracingEnabled = false;
 function enableTracing() {
   if (!tracingEnabled) {
-    knex.on('query', ({ sql, bindings }) => log.trace(sql, bindings));
+    knex.on('query', ({ sql, bindings }) => logHelper.trace(sql, bindings));
   }
   tracingEnabled = true;
 }

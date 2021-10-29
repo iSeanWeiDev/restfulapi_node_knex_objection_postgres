@@ -1,46 +1,49 @@
 module.exports = {
-  extends: [
-    'plugin:shopify/react',
-    'plugin:shopify/polaris',
-    'plugin:shopify/jest',
-    'plugin:shopify/webpack',
-    'react-app',
-    'react-app/jest'
-  ],
+  env: {
+    jest: true,
+    es2020: true,
+    node: true,
+    browser: true
+  },
+  extends: ['prettier', 'airbnb-base', 'eslint:recommended'],
+  // required to lint *.vue files
+  plugins: ['prettier'],
+  parserOptions: {
+    parser: 'babel-eslint',
+    ecmaVersion: 11,
+    sourceType: 'module'
+  },
   rules: {
-    "max-len": [
-      "error",
+    'comma-dangle': ['error', 'never'],
+    'no-console': ['off'],
+    'implicit-arrow-linebreak': 'off',
+    'function-paren-newline': 'off',
+    // allow async-await
+    'generator-star-spacing': 'off',
+    // allow debugger during development
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+
+    indent: 'off',
+    camelcase: 'off',
+    'object-curly-newline': 'off',
+    'import/prefer-default-export': 'off',
+    'import/named': 'off',
+    'operator-linebreak': 'off',
+    'func-names': 'off',
+    'object-shorthand': 'off',
+    'linebreak-style': 'off',
+    'import/no-unresolved': 'off',
+    'import/no-anonymous-default-export': [
+      'error',
       {
-        "code": 100
-      }
-    ],
-    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-    "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
-    "semi": [
-      2,
-      "always"
-    ],
-    "import/no-named-as-default": 0,
-    "import/no-anonymous-default-export": [
-      "error",
-      {
-        "allowArray": false,
-        "allowArrowFunction": false,
-        "allowAnonymousClass": false,
-        "allowAnonymousFunction": false,
-        "allowCallExpression": true,
-        "allowLiteral": false,
-        "allowObject": true
+        allowArray: false,
+        allowArrowFunction: false,
+        allowAnonymousClass: false,
+        allowAnonymousFunction: false,
+        allowCallExpression: true,
+        allowLiteral: false,
+        allowObject: true
       }
     ]
   }
-  },
-  overrides: [
-    {
-      files: ['*.test.*'],
-      rules: {
-        'shopify/jsx-no-hardcoded-content': 'off'
-      }
-    }
-  ]
 };

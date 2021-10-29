@@ -13,4 +13,6 @@ if (process.env.NODE_ENV !== 'production') {
   };
 }
 
-export default pino(logConfig);
+const logHelper = pino(logConfig);
+
+export default logHelper;

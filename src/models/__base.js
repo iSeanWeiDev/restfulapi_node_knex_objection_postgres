@@ -1,6 +1,6 @@
 import { Model } from 'objection';
-import knex from '../database/knex';
-import CommonQueryBuilder from '../database/query-builder';
+import knex from '@app/database/knex';
+import CommonQueryBuilder from '@app/database/query-builder';
 
 Model.knex(knex);
 

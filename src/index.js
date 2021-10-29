@@ -3,37 +3,41 @@
  */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import { localtunnelHelper, appConfigurationHelper, logHelper } from '@app/helpers';
 import app from './app';
-import log from '@app/utils/log';
-import ltHelper from '@app/utils/lt-helper';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 
-process.on('uncaughtException', (ex) => {
-  log.error(ex);
-  process.exit(1);
-});
+(async () => {
+  const variables = await appConfigurationHelper();
+  process.env = { ...process.env, ...variables };
+})();
 
 if (DEBUG) {
   const port = process.env.PORT || 8000;
   const server = app.listen(port, async () => {
     try {
-      await ltHelper.initialize();
-      log.info(`Main Service is listening on port: ${port}`);
+      await localtunnelHelper();
+      logHelper.info(`Main Service is listening on port: ${port}`);
     } catch (error) {
-      console.log(error);
+      logHelper.error(error);
     }
   });
 
   // Handle nodemon shutdown cleanly, otherwise the port might not
   // be freed before we start up again.
   process.once('SIGUSR2', () => {
-    log.warn('Got SIGUSR2, shutting down...');
+    logHelper.warn('Got SIGUSR2, shutting down...');
     server.close(() => {
-      log.warn('Server shut down, exiting.');
+      logHelper.warn('Server shut down, exiting.');
       process.exit();
     });
   });
 }
+
+process.on('uncaughtException', (ex) => {
+  logHelper.error(ex);
+  process.exit(1);
+});
 
 export default app;

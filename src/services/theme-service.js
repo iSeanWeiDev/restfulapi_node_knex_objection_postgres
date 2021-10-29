@@ -1,26 +1,28 @@
 import { Shop, Theme } from '@app/models';
-import { shopifyService } from '@app/services';
+import { ShopifyProvider } from '@app/providers';
+import { THEME_STATUS } from '@app/constants';
 
 export const load = async (shopName) => {
-  try {
-    const shop = await Shop.query().findOne({ name: shopName });
+  const shop = await Shop.query().findOne({ name: shopName });
 
-    const themes = await Theme.query().where({ shopId: shop.id }).returning('*');
+  const themes = await Theme.query().where({ shopId: shop.id }).returning('*');
 
-    return themes;
-  } catch (error) {
-    throw error;
-  }
+  return themes;
+};
+
+export const updateTheme = async (themeId, payload) => {
+  const theme = await Theme.query()
+    .updateAndFetchById(themeId, { scheduledAt: payload.startAt, status: THEME_STATUS.SCHEDULED })
+    .returning('*');
+
+  return theme;
 };
 
 export const remove = async (shopName, accessToken, themeId) => {
-  try {
-    const theme = await Theme.query().findById(themeId);
-    console.log(shopName, accessToken, theme);
-    const resDel = await shopifyService.deleteTheme(shopName, accessToken, theme.themeStoreId);
-    if (resDel) await Theme.query().deleteById(themeId);
-    return true;
-  } catch (error) {
-    throw error;
-  }
+  const shopifyProvider = new ShopifyProvider(shopName, accessToken);
+
+  const theme = await Theme.query().findById(themeId);
+  await shopifyProvider.deleteTheme(theme.apiThemeId);
+  const deltedTheme = await Theme.query().deleteById(themeId);
+  return deltedTheme;
 };
